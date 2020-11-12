@@ -114,7 +114,7 @@ function _gutenberg_synchronize_theme_templates( $template_type ) {
 		$last_checks[ $theme_slug ] = $current_time;
 	}
 	update_option( $option_name, $last_checks );
-	
+
 	// Build and save each template part.
 	foreach ( $template_files as $template_file ) {
 		$content = file_get_contents( $template_file );
