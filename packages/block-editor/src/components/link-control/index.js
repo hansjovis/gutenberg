@@ -191,11 +191,7 @@ function LinkControl( {
 	};
 
 	return (
-		<div
-			tabIndex={ -1 }
-			ref={ wrapperNode }
-			className="block-editor-link-control"
-		>
+		<div ref={ wrapperNode } className="block-editor-link-control">
 			{ isCreatingPage && (
 				<div className="block-editor-link-control__loading">
 					<Spinner /> { __( 'Creating' ) }…

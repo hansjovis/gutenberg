@@ -164,8 +164,11 @@ const MediaReplaceFlow = ( {
 						</MediaUploadCheck>
 						{ onSelectURL && (
 							<div
+								tabIndex="0"
 								className="block-editor-media-flow__url-input"
 								role="menuitem"
+								aria-haspopup="dialog"
+								aria-label={ __( 'Url change form' ) }
 							>
 								<span className="block-editor-media-replace-flow__image-url-label">
 									{ __( 'Current media URL:' ) }

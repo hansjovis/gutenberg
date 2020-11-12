@@ -6,7 +6,7 @@ import classnames from 'classnames';
 /**
  * WordPress dependencies
  */
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { Button, ExternalLink } from '@wordpress/components';
 import { filterURLForDisplay, safeDecodeURI } from '@wordpress/url';
 
@@ -31,6 +31,11 @@ export default function LinkPreview( { value, onEditClick } ) {
 				<ExternalLink
 					className="block-editor-link-control__search-item-title"
 					href={ value.url }
+					aria-label={ sprintf(
+						/* translators: %s: currently displayed URL's value. */
+						__( 'Currently selected URL is %s ' ),
+						displayURL
+					) }
 				>
 					{ ( value && value.title ) || displayURL }
 				</ExternalLink>
