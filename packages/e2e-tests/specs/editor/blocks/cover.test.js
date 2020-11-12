@@ -5,6 +5,7 @@ import {
 	insertBlock,
 	createNewPost,
 	openDocumentSettingsSidebar,
+	canvas,
 } from '@wordpress/e2e-test-utils';
 
 describe( 'Cover', () => {
@@ -19,7 +20,7 @@ describe( 'Cover', () => {
 		// Open the sidebar
 		await openDocumentSettingsSidebar();
 		// Choose the first solid color as the background of the cover.
-		await page.click(
+		await canvas().click(
 			'.components-circular-option-picker__option-wrapper:first-child button'
 		);
 

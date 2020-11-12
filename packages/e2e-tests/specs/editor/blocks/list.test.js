@@ -10,6 +10,7 @@ import {
 	transformBlockTo,
 	pressKeyWithModifier,
 	insertBlock,
+	canvas,
 } from '@wordpress/e2e-test-utils';
 
 describe( 'List', () => {
@@ -147,7 +148,7 @@ describe( 'List', () => {
 		await page.keyboard.press( 'Enter' );
 		await page.keyboard.type( 'two' );
 		await page.keyboard.down( 'Shift' );
-		await page.click( '[data-type="core/paragraph"]' );
+		await canvas().click( '[data-type="core/paragraph"]' );
 		await page.keyboard.up( 'Shift' );
 		await transformBlockTo( 'List' );
 
@@ -172,7 +173,7 @@ describe( 'List', () => {
 		await page.keyboard.press( 'Enter' );
 		await page.keyboard.type( 'two' );
 		await page.keyboard.down( 'Shift' );
-		await page.click( '[data-type="core/paragraph"]' );
+		await canvas().click( '[data-type="core/paragraph"]' );
 		await page.keyboard.up( 'Shift' );
 		await transformBlockTo( 'List' );
 

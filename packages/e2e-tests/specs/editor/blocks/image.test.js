@@ -13,13 +13,14 @@ import {
 	insertBlock,
 	getEditedPostContent,
 	createNewPost,
-	clickButton,
+	clickBlockToolbarButton,
 	openDocumentSettingsSidebar,
+	canvas,
 } from '@wordpress/e2e-test-utils';
 
-async function upload( selector ) {
-	await page.waitForSelector( selector );
-	const inputElement = await page.$( selector );
+async function upload( selector, frame = canvas() ) {
+	await frame.waitForSelector( selector );
+	const inputElement = await frame.$( selector );
 	const testImagePath = path.join(
 		__dirname,
 		'..',
@@ -36,7 +37,7 @@ async function upload( selector ) {
 }
 
 async function waitForImage( filename ) {
-	await page.waitForSelector(
+	await canvas().waitForSelector(
 		`.wp-block-image img[src$="${ filename }.png"]`
 	);
 }
@@ -76,9 +77,10 @@ describe( 'Image', () => {
 
 		expect( await getEditedPostContent() ).toMatch( regex2 );
 
-		await clickButton( 'Replace' );
+		await clickBlockToolbarButton( 'Replace', 'content' );
 		const filename2 = await upload(
-			'.block-editor-media-replace-flow__options input[type="file"]'
+			'.block-editor-media-replace-flow__options input[type="file"]',
+			page
 		);
 		await waitForImage( filename2 );
 
@@ -87,7 +89,7 @@ describe( 'Image', () => {
 		);
 		expect( await getEditedPostContent() ).toMatch( regex3 );
 
-		await page.click( '.wp-block-image img' );
+		await canvas().click( '.wp-block-image img' );
 		await page.keyboard.press( 'Backspace' );
 
 		expect( await getEditedPostContent() ).toBe( '' );
@@ -103,7 +105,7 @@ describe( 'Image', () => {
 		await page.keyboard.type( '2' );
 
 		expect(
-			await page.evaluate( () => document.activeElement.innerHTML )
+			await canvas().evaluate( () => document.activeElement.innerHTML )
 		).toBe( '12' );
 	} );
 
@@ -116,7 +118,7 @@ describe( 'Image', () => {
 		await page.keyboard.press( 'Enter' );
 
 		expect(
-			await page.evaluate( () => document.activeElement.innerHTML )
+			await canvas().evaluate( () => document.activeElement.innerHTML )
 		).toBe( '1<br data-rich-text-line-break="true">2' );
 	} );
 
@@ -127,7 +129,7 @@ describe( 'Image', () => {
 		// Confirm correct setup.
 		expect( await getEditedPostContent() ).toMatchSnapshot();
 
-		const image = await page.$( '[data-type="core/image"]' );
+		const image = await canvas().$( '[data-type="core/image"]' );
 
 		await image.evaluate( () => {
 			const input = document.createElement( 'input' );

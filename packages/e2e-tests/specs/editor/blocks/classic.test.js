@@ -16,6 +16,7 @@ import {
 	pressKeyWithModifier,
 	clickBlockToolbarButton,
 	saveDraft,
+	canvas,
 } from '@wordpress/e2e-test-utils';
 
 describe( 'Classic', () => {
@@ -86,7 +87,7 @@ describe( 'Classic', () => {
 
 		// Convert to blocks and verify it worked correctly.
 		await clickBlockToolbarButton( 'Convert to blocks', 'content' );
-		await page.waitForSelector( '.wp-block[data-type="core/gallery"]' );
+		await canvas().waitForSelector( '.wp-block[data-type="core/gallery"]' );
 		expect( await getEditedPostContent() ).toMatch( /<!-- wp:gallery/ );
 
 		// Check that you can undo back to a Classic block gallery in one step.
@@ -97,7 +98,7 @@ describe( 'Classic', () => {
 
 		// Convert to blocks again and verify it worked correctly.
 		await clickBlockToolbarButton( 'Convert to blocks', 'content' );
-		await page.waitForSelector( '.wp-block[data-type="core/gallery"]' );
+		await canvas().waitForSelector( '.wp-block[data-type="core/gallery"]' );
 		expect( await getEditedPostContent() ).toMatch( /<!-- wp:gallery/ );
 	} );
 

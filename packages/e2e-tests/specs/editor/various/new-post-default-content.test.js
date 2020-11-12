@@ -8,6 +8,7 @@ import {
 	findSidebarPanelToggleButtonWithTitle,
 	getEditedPostContent,
 	openDocumentSettingsSidebar,
+	canvas,
 } from '@wordpress/e2e-test-utils';
 
 describe( 'new editor filtered state', () => {
@@ -25,7 +26,7 @@ describe( 'new editor filtered state', () => {
 
 	it( 'should respect default content', async () => {
 		// get the values that should have their defaults changed.
-		const title = await page.$eval(
+		const title = await canvas().$eval(
 			'.editor-post-title__input',
 			( element ) => element.innerHTML
 		);

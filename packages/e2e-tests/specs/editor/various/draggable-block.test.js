@@ -7,6 +7,7 @@ import {
 	deactivatePlugin,
 	activatePlugin,
 	showBlockToolbar,
+	canvas,
 } from '@wordpress/e2e-test-utils';
 
 describe( 'Draggable block', () => {
@@ -59,9 +60,9 @@ describe( 'Draggable block', () => {
 		await page.mouse.move( x + 10, y + 10, { steps: 10 } );
 
 		// Confirm dragged state.
-		await page.waitForSelector( '.block-editor-block-mover__drag-clone' );
+		await page.waitForSelector( '.components-draggable__clone' );
 
-		const paragraph = await page.$( '[data-type="core/paragraph"]' );
+		const paragraph = await canvas().$( '[data-type="core/paragraph"]' );
 
 		const paragraphRect = await paragraph.boundingBox();
 		const pX = paragraphRect.x + paragraphRect.width / 2;
@@ -77,7 +78,7 @@ describe( 'Draggable block', () => {
 				const dataTransfer = new DataTransfer();
 				dataTransfer.setData(
 					'text/plain',
-					JSON.stringify( window._dataTransfer )
+					JSON.stringify( window.parent._dataTransfer )
 				);
 				const event = new DragEvent( 'drop', {
 					bubbles: true,
