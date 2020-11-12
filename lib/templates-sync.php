@@ -89,11 +89,7 @@ function _gutenberg_synchronize_theme_templates( $template_type ) {
 		'template'      => 'block-templates',
 		'template-part' => 'block-template-parts',
 	);
-
-	$themes = array( get_stylesheet() );
-	if ( is_child_theme() ) {
-		$themes[] = get_template();
-	}
+	$themes              = array_unique( array( get_stylesheet(), get_template() ) );
 
 	// Get file paths for all theme supplied template that changed since last check.
 	$template_files = array();
@@ -128,3 +124,12 @@ function _gutenberg_synchronize_theme_templates( $template_type ) {
 		_gutenberg_create_auto_draft_for_template( $template_post_types[ $template_type ], $slug, wp_get_theme()->get_stylesheet(), $content );
 	}
 }
+
+/**
+ * Synchronize changed template and template part files after WordPress is loaded
+ */
+function gutenberg_synchronize_theme_templates_on_load() {
+	_gutenberg_synchronize_theme_templates( 'template' );
+	_gutenberg_synchronize_theme_templates( 'template_part' );
+}
+add_action( 'wp_loaded', 'gutenberg_synchronize_theme_templates_on_load' );
