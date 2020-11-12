@@ -109,3 +109,64 @@ function _gutenberg_synchronize_theme_templates( $template_type ) {
 		_gutenberg_create_auto_draft_for_template( $template_post_types[ $template_type ], $slug, wp_get_theme()->get_stylesheet(), $content );
 	}
 }
+
+/**
+ * Create the templates and template parts auto-drafts for the current theme.
+ * If the current theme is a child theme then the parent theme is synchronized as well.
+ * Runs only if current or parent theme was never loaded before or it is a newer version.
+ *
+ * To force synchronization on every load define BLOCK_THEME_DEV_MODE constant with true value.
+ *
+ * ```php
+ * define( 'BLOCK_THEME_DEV_MODE', true );
+ * ```
+ */
+function gutenberg_synchronize_theme_templates_on_version_change() {
+	if ( defined( 'BLOCK_THEME_DEV_MODE' ) && BLOCK_THEME_DEV_MODE ) {
+		_gutenberg_synchronize_theme_templates( 'template-part' );
+		_gutenberg_synchronize_theme_templates( 'template' );
+		return;
+	}
+
+	$create_auto_drafts = false;
+
+	$theme             = wp_get_theme();
+	$stylesheet        = $theme->get_stylesheet();
+	$parent_theme      = $theme->parent();
+	$parent_stylesheet = $parent_theme ? $parent_theme->get_stylesheet() : null;
+
+	$last_auto_drafts_versions = get_option( 'gutenberg_last_template_auto_drafts_theme_versions', array() );
+	if ( isset( $last_auto_drafts_versions[ $stylesheet ] ) ) {
+		$last_version = $last_auto_drafts_versions[ $stylesheet ];
+		if ( version_compare( $theme->version, $last_version, '>' ) ) {
+			$create_auto_drafts = true;
+		}
+	} else {
+		$create_auto_drafts = true;
+	}
+
+	if ( $parent_theme ) {
+		if ( isset( $last_auto_drafts_versions[ $parent_stylesheet ] ) ) {
+			$last_version = $last_auto_drafts_versions[ $parent_stylesheet ];
+			if ( version_compare( $parent_theme->version, $last_version, '>' ) ) {
+				$create_auto_drafts = true;
+			}
+		} else {
+			$create_auto_drafts = true;
+		}
+	}
+
+	if ( ! $create_auto_drafts ) {
+		return;
+	}
+
+	_gutenberg_synchronize_theme_templates( 'template-part' );
+	_gutenberg_synchronize_theme_templates( 'template' );
+
+	$last_auto_drafts_versions[ $stylesheet ] = $theme->version;
+	if ( $parent_theme ) {
+		$last_auto_drafts_versions[ $parent_stylesheet ] = $parent_theme->version;
+	}
+	update_option( 'gutenberg_last_template_auto_drafts_theme_versions', $last_auto_drafts_versions );
+}
+add_action( 'wp_loaded', 'gutenberg_synchronize_theme_templates_on_version_change' );
