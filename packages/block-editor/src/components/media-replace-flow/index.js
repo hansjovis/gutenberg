@@ -162,33 +162,27 @@ const MediaReplaceFlow = ( {
 								} }
 							/>
 						</MediaUploadCheck>
+						{ onSelectURL && (
+							<div
+								className="block-editor-media-flow__url-input"
+								role="menuitem"
+							>
+								<span className="block-editor-media-replace-flow__image-url-label">
+									{ __( 'Current media URL:' ) }
+								</span>
+								<LinkControl
+									value={ { url: mediaURLValue } }
+									settings={ [] }
+									showSuggestions={ false }
+									onChange={ ( { url } ) => {
+										setMediaURLValue( url );
+										selectURL( url );
+										editMediaButtonRef.current.focus();
+									} }
+								/>
+							</div>
+						) }
 					</NavigableMenu>
-					{ onSelectURL && (
-						// eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-						<form
-							className="block-editor-media-flow__url-input"
-							onKeyDown={ ( event ) => {
-								event.stopPropagation();
-							} }
-							onKeyPress={ ( event ) => {
-								event.stopPropagation();
-							} }
-						>
-							<span className="block-editor-media-replace-flow__image-url-label">
-								{ __( 'Current media URL:' ) }
-							</span>
-							<LinkControl
-								value={ { url: mediaURLValue } }
-								settings={ [] }
-								showSuggestions={ false }
-								onChange={ ( { url } ) => {
-									setMediaURLValue( url );
-									selectURL( url );
-									editMediaButtonRef.current.focus();
-								} }
-							/>
-						</form>
-					) }
 				</>
 			) }
 		/>
