@@ -90,12 +90,31 @@ function _gutenberg_synchronize_theme_templates( $template_type ) {
 		'template-part' => 'block-template-parts',
 	);
 
-	// Get file paths for all theme supplied template.
-	$template_files = _gutenberg_get_template_paths( get_stylesheet_directory() . '/' . $template_base_paths[ $template_type ] );
+	$themes = array( get_stylesheet() );
 	if ( is_child_theme() ) {
-		$template_files = array_merge( $template_files, _gutenberg_get_template_paths( get_template_directory() . '/' . $template_base_paths[ $template_type ] ) );
+		$themes[] = get_template();
 	}
 
+	// Get file paths for all theme supplied template that changed since last check.
+	$template_files = array();
+	$option_name    = 'gutenberg_last_synchronize_theme_' . $template_type . '_checks';
+	$last_checks    = get_option( $option_name, array() );
+	$current_time   = time();
+	foreach ( $themes as $theme_slug ) {
+		$theme      = wp_get_theme( $theme_slug );
+		$last_check = isset( $last_checks[ $theme_slug ] ) ? $last_checks[ $theme_slug ] : 0;
+
+		$theme_template_files = _gutenberg_get_template_paths( $theme->get_stylesheet_directory() . '/' . $template_base_paths[ $template_type ] );
+		foreach ( $theme_template_files as $template_file ) {
+			if ( filemtime( $template_file ) > $last_check ) {
+				$template_files[] = $template_file;
+			}
+		}
+
+		$last_checks[ $theme_slug ] = $current_time;
+	}
+	update_option( $option_name, $last_checks );
+	
 	// Build and save each template part.
 	foreach ( $template_files as $template_file ) {
 		$content = file_get_contents( $template_file );
