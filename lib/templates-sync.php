@@ -89,18 +89,18 @@ function _gutenberg_synchronize_theme_templates( $template_type ) {
 		'template'      => 'block-templates',
 		'template-part' => 'block-template-parts',
 	);
-	$themes              = array_unique( array( get_stylesheet(), get_template() ) );
+	$themes              = array_unique( array( get_stylesheet_directory(), get_template_directory() ) );
 
 	// Get file paths for all theme supplied template that changed since last check.
 	$template_files = array();
 	$option_name    = 'gutenberg_last_synchronize_theme_' . $template_type . '_checks';
 	$last_checks    = get_option( $option_name, array() );
 	$current_time   = time();
-	foreach ( $themes as $theme_slug ) {
-		$theme      = wp_get_theme( $theme_slug );
+	foreach ( $themes as $theme_dir ) {
+		$theme_slug = basename( $theme_dir );
 		$last_check = isset( $last_checks[ $theme_slug ] ) ? $last_checks[ $theme_slug ] : 0;
 
-		$theme_template_files = _gutenberg_get_template_paths( $theme->get_stylesheet_directory() . '/' . $template_base_paths[ $template_type ] );
+		$theme_template_files = _gutenberg_get_template_paths( $theme_dir . '/' . $template_base_paths[ $template_type ] );
 		foreach ( $theme_template_files as $template_file ) {
 			if ( filemtime( $template_file ) > $last_check ) {
 				$template_files[] = $template_file;
