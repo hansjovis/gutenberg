@@ -319,7 +319,7 @@ wp.hooks.addFilter( 'editor.BlockListBlock', 'my-plugin/with-client-id-class-nam
 ```
 {% end %}
 
-Adding properties to the new wrapper component can be achieved by adding them to the `wrapperProps` property of the returned component.
+Adding new properties to the block's wrapper component can be achieved by adding them to the `wrapperProps` property of the returned component.
 
 _Example:_
 
