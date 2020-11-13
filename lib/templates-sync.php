@@ -129,6 +129,10 @@ function _gutenberg_synchronize_theme_templates( $template_type ) {
  * Synchronize changed template and template part files after WordPress is loaded
  */
 function gutenberg_synchronize_theme_templates_on_load() {
+	if ( ! gutenberg_is_fse_theme() ) {
+		return;
+	}
+
 	_gutenberg_synchronize_theme_templates( 'template' );
 	_gutenberg_synchronize_theme_templates( 'template_part' );
 }
