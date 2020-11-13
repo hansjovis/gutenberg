@@ -116,14 +116,15 @@ function _gutenberg_synchronize_theme_templates( $template_type ) {
 
 	// Build and save each template part.
 	foreach ( $template_files as $template_file ) {
-		$path  = $template_file['path'];
-		$theme = $template_file['theme'];
+		$path               = $template_file['path'];
+		$theme              = $template_file['theme'];
+		$template_base_path = $template_base_paths[ $template_type ];
 
 		$content = file_get_contents( $path );
 		$slug    = substr(
 			$path,
 			// Starting position of slug.
-			strpos( $path, $template_base_paths[ $template_type ] . '/' ) + 1 + strlen( $template_base_paths[ $template_type ] ),
+			strpos( $path, $template_base_path . '/' ) + 1 + strlen( $template_base_path ),
 			// Subtract ending '.html'.
 			-5
 		);
