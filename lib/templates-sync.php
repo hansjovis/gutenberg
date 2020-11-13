@@ -103,7 +103,10 @@ function _gutenberg_synchronize_theme_templates( $template_type ) {
 		$theme_template_files = _gutenberg_get_template_paths( $theme_dir . '/' . $template_base_paths[ $template_type ] );
 		foreach ( $theme_template_files as $template_file ) {
 			if ( filemtime( $template_file ) > $last_check ) {
-				$template_files[] = $template_file;
+				$template_files[] = array(
+					'path'  => $template_file,
+					'theme' => $theme_slug,
+				);
 			}
 		}
 
@@ -113,15 +116,18 @@ function _gutenberg_synchronize_theme_templates( $template_type ) {
 
 	// Build and save each template part.
 	foreach ( $template_files as $template_file ) {
-		$content = file_get_contents( $template_file );
+		$path  = $template_file['path'];
+		$theme = $template_file['theme'];
+
+		$content = file_get_contents( $path );
 		$slug    = substr(
-			$template_file,
+			$path,
 			// Starting position of slug.
-			strpos( $template_file, $template_base_paths[ $template_type ] . '/' ) + 1 + strlen( $template_base_paths[ $template_type ] ),
+			strpos( $path, $template_base_paths[ $template_type ] . '/' ) + 1 + strlen( $template_base_paths[ $template_type ] ),
 			// Subtract ending '.html'.
 			-5
 		);
-		_gutenberg_create_auto_draft_for_template( $template_post_types[ $template_type ], $slug, wp_get_theme()->get_stylesheet(), $content );
+		_gutenberg_create_auto_draft_for_template( $template_post_types[ $template_type ], $slug, $theme, $content );
 	}
 }
 
