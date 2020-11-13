@@ -1,7 +1,8 @@
 /**
  * Internal dependencies
  */
-import { showBlockToolbar, canvas } from './show-block-toolbar';
+import { showBlockToolbar } from './show-block-toolbar';
+import { canvas } from './canvas';
 
 /**
  * Converts editor's block type.

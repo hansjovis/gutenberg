@@ -8,6 +8,7 @@ import {
 	visitAdminPage,
 	trashAllPosts,
 	activateTheme,
+	canvas,
 } from '@wordpress/e2e-test-utils';
 import { addQueryArgs } from '@wordpress/url';
 
@@ -97,7 +98,7 @@ describe( 'Multi-entity save flow', () => {
 			expect.assertions( 27 );
 			await createNewPost();
 			// Edit the page some.
-			await page.click( '.editor-post-title' );
+			await canvas().click( '.editor-post-title' );
 			await page.keyboard.type( 'Test Post...' );
 			await page.keyboard.press( 'Enter' );
 
@@ -112,7 +113,7 @@ describe( 'Multi-entity save flow', () => {
 
 			// Add a template part and edit it.
 			await insertBlock( 'Template Part' );
-			const [ createNewButton ] = await page.$x(
+			const [ createNewButton ] = await canvas().$x(
 				createNewButtonSelector
 			);
 			await createNewButton.click();
@@ -167,7 +168,7 @@ describe( 'Multi-entity save flow', () => {
 			await publishPost();
 
 			// Update the post.
-			await page.click( '.editor-post-title' );
+			await canvas().click( '.editor-post-title' );
 			await page.keyboard.type( '...more title!' );
 
 			// Verify update button is enabled.
